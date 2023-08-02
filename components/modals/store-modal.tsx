@@ -6,7 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 
-import { ususeStoreModal } from "@/hooks/use-store-modal";
+import { useStoreModal } from "@/hooks/use-store-modal";
 import { Modal } from "../ui/modal";
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
@@ -18,7 +18,7 @@ const formSchema = z.object({
 });
 
 export const StoreModal = () => {
-    const storeModal = ususeStoreModal();
+    const storeModal = useStoreModal();
     const [loading, setLoading] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -32,7 +32,7 @@ export const StoreModal = () => {
         try {
             setLoading(true);
             const response = await axios.post('/api/stores', values);
-            toast.success("Store Created.");
+            window.location.assign(`/${response.data.id}`);
         } catch (error) {
             console.log(error);
             toast.error("Can't create a store");
