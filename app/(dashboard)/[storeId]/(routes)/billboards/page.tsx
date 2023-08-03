@@ -1,26 +1,32 @@
-"use client";
-
-import { Heading } from "@/components/ui/heading";
+import prismadb from "@/lib/prismadb";
 import { BillboardClient } from "./components/client";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { useParams, useRouter } from "next/navigation";
+import { BillboardColumn } from "./components/columns";
+import { format } from "date-fns";
 
-const BillboardsPage = () => {
-    const router = useRouter();
-    const params = useParams();
+
+const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
+
+    const billboards = await prismadb.billboard.findMany({
+        where: {
+            storeId: params.storeId,
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+    });
+
+    const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
+        id: item.id,
+        label: item.label,
+        createdAt: format(item.createdAt, "MMMM do, yyyy")
+    }))
+
     return (
-        <>
-            <div className="flex items-center justify-between">
-                <Heading title="Billboard (0)" description="Manage billboards of the store" />
-                <Button onClick={() => router.push(`/${params.storeId}/billboards/new`)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New
-                </Button>
+        <div className="flex-col">
+            <div className="flex-1 space-y-4 p-8 pt-6">
+                <BillboardClient data={formattedBillboards} />
             </div>
-            <Separator />
-        </>
+        </div>
     );
 }
 
