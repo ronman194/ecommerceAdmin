@@ -4,9 +4,23 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Menu } from "lucide-react";
+
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
     const pathName = usePathname();
     const params = useParams();
+
+
     const routes = [
         {
             href: `/${params.storeId}`,
@@ -49,17 +63,66 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
             active: pathName === `/${params.storeId}/settings`,
         },
     ];
+    // return (
+
+    //     <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
+    //         {routes.map((route) => (
+    //             <Link
+    //                 key={route.href}
+    //                 href={route.href}
+    //                 className={cn("text-sm font-medium transition-colors hover:text-primary",
+    //                     route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
+    //                 {route.label}
+    //             </Link>
+    //         ))}
+    //     </nav>
+    // );
     return (
-        <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
-            {routes.map((route) => (
-                <Link
-                    key={route.href}
-                    href={route.href}
-                    className={cn("text-sm font-medium transition-colors hover:text-primary",
-                        route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
-                    {route.label}
-                </Link>
-            ))}
-        </nav>
+        <>
+            {/* Large screen (desktop) navbar */}
+            <nav className="hidden md:flex items-center justify-between space-x-2 md:space-x-4 mx-auto">
+                {routes.map((route) => (
+                    <Link
+                        key={route.href}
+                        href={route.href}
+                        className={cn(
+                            "text-sm font-medium transition-colors hover:text-primary",
+                            route.active ? "text-black dark:text-white" : "text-muted-foreground"
+                        )}
+                    >
+                        {route.label}
+                    </Link>
+                ))}
+            </nav>
+
+            {/* Small screen (mobile) burger menu */}
+            <div className="md:hidden items-center mx-auto">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline"><Menu /> </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuGroup>
+                            {routes.map((route) => (
+                                <Link
+                                    key={route.href}
+                                    href={route.href}
+                                    className={cn(
+                                        "text-sm font-medium transition-colors hover:text-primary",
+                                        route.active ? "text-black dark:text-white" : "text-muted-foreground"
+                                    )}
+                                >
+                                    <DropdownMenuItem>
+                                        {route.label}
+                                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                    </DropdownMenuItem>
+                                </Link>
+                            ))}
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+
+        </>
     );
 };
