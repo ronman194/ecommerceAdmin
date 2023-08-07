@@ -5,6 +5,7 @@ import { Copy, Server } from "lucide-react";
 import { Badge, BadgeProps } from "./badge";
 import { Button } from "./button";
 import { toast } from "react-hot-toast";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ApiAlertProps {
@@ -26,7 +27,6 @@ const variantMap: Record<ApiAlertProps["variant"], BadgeProps["variant"]> = {
 export const ApiAlert: React.FC<ApiAlertProps> = ({ title, description, variant = "public" }) => {
 
     const onCopy = () => {
-        navigator.clipboard.writeText(description);
         toast.success("Copy to clipboard");
     }
     return (
@@ -62,9 +62,11 @@ export const ApiAlert: React.FC<ApiAlertProps> = ({ title, description, variant 
                     <CardDescription className="bg-muted rounded md:px-2 px-0.5 py-2 font-semibold font-sans">
                         {description}
                     </CardDescription>
-                    <Button variant="outline" size="icon" onClick={onCopy} className="md:ml-auto ml-2">
-                        <Copy className="h-4 w-4" />
-                    </Button>
+                    <CopyToClipboard text={description}>
+                        <Button variant="outline" size="icon" onClick={onCopy} className="md:ml-auto ml-2">
+                            <Copy className="h-4 w-4" />
+                        </Button>
+                    </CopyToClipboard>
                 </div>
             </CardHeader>
         </Card>
