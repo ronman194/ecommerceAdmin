@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: 'Admin Dashboard',
   description: 'Admin Dashboard',
 }
-
+ 
 export default function RootLayout({
   children,
 }: {
